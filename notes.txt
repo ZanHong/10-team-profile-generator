@@ -1,0 +1,6 @@
+* command line
+1st create manager (only one manager)
+2nd create team (multiple)
+* 3 kinds of employment
+* Base class Employees
+* Implement classes
