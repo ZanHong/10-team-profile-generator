@@ -10,18 +10,106 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 const { inherits } = require("util");
+const { finished } = require("stream");
 
 const employees = [];
 
-var generalQuestion = []; // name id and email
+// General Questions
+var generalQuestion = [
+    {
+        type: "input",
+        name: "name",
+        message: "What is your employee's name?"
+    },
+    {
+        type: "number",
+        name: "id",
+        message: "What is your employee's id? (number)"
+    },
+    {
+        type: "input",
+        name: "email",
+        message: "What is your employee's email?"
+    }
+];
 
-const managerQuestion = {};
+// Question for the Manager
+const managerQuestions = [
+    {
+        type: "input",
+        name: "name",
+        message: "What is the manager's name?"
+    },
+    {
+        type: "input",
+        name: "id",
+        message: "What is the manager's id?"
+    },
+    {
+        type: "input",
+        name: "email",
+        message: "What is the manager's email?"
+    },
+    {
+        type: "input",
+        name: "officeNumber",
+        message: "What is the manager's office number?"
+    }
+];
+
+// Questions for Engineers
+const engineerQuestions = [
+    {
+        type: "input",
+        name: "name",
+        message: "What is the engineer's name?"
+    },
+    {
+        type: "input",
+        name: "id",
+        message: "What is the engineer's id?"
+    },
+    {
+        type: "input",
+        name: "email",
+        message: "What is the engineer's email?"
+    },
+    {
+        type: "input",
+        name: "github",
+        message: "What is the engineer's GitHub username??"
+    }
+];
+
+// Questions for Interns
+const internQuestions = [
+    {
+        type: "input",
+        name: "name",
+        message: "What is the intern's name?"
+    },
+    {
+        type: "input",
+        name: "id",
+        message: "What is the intern's id?"
+    },
+    {
+        type: "input",
+        name: "email",
+        message: "What is the intern's email?"
+    },
+    {
+        type: "input",
+        name: "github",
+        message: "What is the intern's GitHub username??"
+    }
+];
 
 function init() {
-    inquirer.prompt([...generalQuestion, managerQuestion])
+    inquirer.prompt(managerQuestions)
         .then(function ({ name, id, email, officeNumber }) { // Object deconstruction
             const manager = new Manager(name, id, email, officeNumber);
-            employee.push(manager);
+            employees.push(manager);
             console.log(employees) // test
             createTeam();
         });
@@ -30,30 +118,42 @@ function init() {
 function createTeam() {
     inquirer.prompt({
         // question to ask which employee type
-    }).then(function (employeeType) {
+        type: "list",
+        name: "employeeType",
+        message: "What type of employee do you want to create? (Select 'Finished' to stop adding employees)",
+        choices: ["Engineer", "Intern", "I am done adding employees!"]
+    }).then(function ({ employeeType }) {
         if (employeeType === "Engineer") {
             createEngineer();
         } else if (employeeType === "Intern") {
             createIntern();
-        } else {
+        } else if (employeeType === "I am done adding employees!") {
             console.log(render(employees));
         }
     })
-}
+};
 
 function createEngineer() {
-    inquirer.prompt([...generalQuestion, engineerQuestion])
+    inquirer.prompt(engineerQuestions)
         .then(function ({ name, id, email, github }) { // Object deconstruction
             const engineer = new Engineer(name, id, email, github);
-            employee.push(engineer);
+            employees.push(engineer);
             console.log(employees)
             createTeam();
         });
-}
+};
 
-saveFile();
+function createIntern() {
+    inquirer.prompt(internQuestions)
+        .then(function ({ name, id, email, github }) { // Object deconstruction
+            const intern = new Intern(name, id, email, github);
+            employees.push(intern);
+            console.log(employees)
+            createTeam();
+        });
+};
 
-createIntern();
+// saveFile();
 
 init();
 
