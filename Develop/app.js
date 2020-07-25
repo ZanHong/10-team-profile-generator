@@ -77,7 +77,7 @@ const engineerQuestions = [
     {
         type: "input",
         name: "github",
-        message: "What is the engineer's GitHub username??"
+        message: "What is the engineer's GitHub username?"
     }
 ];
 
@@ -100,8 +100,8 @@ const internQuestions = [
     },
     {
         type: "input",
-        name: "github",
-        message: "What is the intern's GitHub username??"
+        name: "school",
+        message: "What is the intern's school?"
     }
 ];
 
@@ -110,14 +110,13 @@ function init() {
         .then(function ({ name, id, email, officeNumber }) { // Object deconstruction
             const manager = new Manager(name, id, email, officeNumber);
             employees.push(manager);
-            console.log(employees) // test
             createTeam();
         });
 };
 
 function createTeam() {
     inquirer.prompt({
-        // question to ask which employee type
+        // Question to ask which employee type
         type: "list",
         name: "employeeType",
         message: "What type of employee do you want to create? (Select 'Finished' to stop adding employees)",
@@ -128,7 +127,6 @@ function createTeam() {
         } else if (employeeType === "Intern") {
             createIntern();
         } else if (employeeType === "I am done adding employees!") {
-            console.log(render(employees));
             saveFile();
         }
     })
@@ -139,17 +137,15 @@ function createEngineer() {
         .then(function ({ name, id, email, github }) { // Object deconstruction
             const engineer = new Engineer(name, id, email, github);
             employees.push(engineer);
-            console.log(employees)
             createTeam();
         });
 };
 
 function createIntern() {
     inquirer.prompt(internQuestions)
-        .then(function ({ name, id, email, github }) { // Object deconstruction
-            const intern = new Intern(name, id, email, github);
+        .then(function ({ name, id, email, school }) { // Object deconstruction
+            const intern = new Intern(name, id, email, school);
             employees.push(intern);
-            console.log(employees)
             createTeam();
         });
 };
